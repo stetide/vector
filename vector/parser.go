@@ -166,6 +166,8 @@ func (p *Parser) makeKeywNode() (Node, error) {
 		node, err = p.makeVecNode()
 	case kwQUIT.name, kwQUIT.getNameByAlias(p.curTok.val):
 		err = ExitErr{}
+	case kwHELP.name:
+		err = HelpErr{}
 	default:
 		err = errors.New("Keyword not implemented")
 	}
