@@ -1,0 +1,14 @@
+fmt.Println(
+    "Assign variable:   $ 'name' = 'expression'\n
+    End program:        $ quit | $ close | $ end | $ exit \n
+    Create vector:      vec('x' 'y' 'z' ...) | ['x' 'y' 'z' ...] | vec('x';'y';'z';...) | ['x';'y';'z';...]\n
+    \n
+    Operator: \n
+        Add:        '+' \n
+        Subtract:   '-' \n
+        Multiply:   '*' \n
+        Devide:     '/' | ':' \n
+        Power:      '^'  \n
+        Root:       '\\' \n
+    "
+)

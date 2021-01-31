@@ -1,0 +1,13 @@
+VERION 2.0.1
+       | | |
+from scratch
+         | |
+    new feature
+           |
+        bug fix
+
+implement help
+fix bug $ -a = 3 >> (-%!s(<nil>))
+fix bug $ vec(1 -1 2) >> vec(0 1)
+implement clear
+implement history

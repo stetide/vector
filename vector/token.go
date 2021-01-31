@@ -1,0 +1,72 @@
+package vector
+
+import (
+	"fmt"
+	"strings"
+)
+
+const (
+	tEMPTY = iota
+	tNUM
+	tIDENT
+	tKEYW
+	tDLM
+	tSPACE
+	tPLUS
+	tMINUS
+	tMUL
+	tDIV
+	tPOW
+	tROOT
+	tEQ
+	tLPAREN
+	tRPAREN
+	tLVECPAR
+	tRVECPAR
+	tABSQ
+	tABS
+)
+
+var sTypes = []string{
+	"EMPTY",
+	"NUM",
+	"IDENT",
+	"KEYW",
+	"DLM",
+	"SPACE",
+	"PLUS",
+	"MINUS",
+	"MUL",
+	"DIV",
+	"POW",
+	"ROOT",
+	"EQ",
+	"LPAREN",
+	"RPAREN",
+	"LVECPAR",
+	"RVECPAR",
+	"ABSQ",
+	"ABS",
+}
+
+// TokenType is Token typ
+type TokenType int
+
+func (t TokenType) String() string {
+	return sTypes[t]
+}
+
+// Token is Token
+type Token struct {
+	ttype TokenType
+	val   string
+}
+
+func (t Token) String() string {
+	if t.ttype == tKEYW {
+		return strings.ToUpper(fmt.Sprintf("%s", t.val))
+	} else if t.ttype > tKEYW {
+		return fmt.Sprintf("%s", t.ttype)
+	}
+	return fmt.Sprintf("%s:%s", t.ttype, t.val)
+}
