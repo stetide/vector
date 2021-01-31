@@ -48,7 +48,7 @@ func main() {
 			push(err)
 			continue
 		}
-		fmt.Println(ast)
+		// fmt.Println(ast)
 
 		res, err := vector.Execute(ast)
 		if err != nil {
