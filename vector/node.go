@@ -72,6 +72,9 @@ func (n UnaryNode) resolve() (Node, error) {
 	if err != nil {
 		return nil, err
 	}
+	if n.node == nil {
+		return nil, errors.New("Invalid syntax")
+	}
 
 	switch n.op.ttype {
 	case tPLUS:
@@ -95,7 +98,7 @@ func (n UnaryNode) resolve() (Node, error) {
 			return n.node.(VecNode).abs(), nil
 		}
 	default:
-		return nil, errors.New("Not unary operator not implemented")
+		return nil, errors.New("Unary operator not implemented")
 	}
 	return n, nil
 }
