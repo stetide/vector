@@ -1,10 +1,37 @@
 package vector
 
+import (
+	"os"
+	"os/exec"
+	"runtime"
+)
+
 // ExitErr is exit err
 type ExitErr struct{}
 
 func (e ExitErr) Error() string {
 	return "exit"
+}
+
+// ClearErr clears screen
+type ClearErr struct{}
+
+// Clear clears screen
+func (e ClearErr) Clear() {
+	switch runtime.GOOS {
+	case "windows":
+		cmd := exec.Command("cls")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	case "linux":
+		cmd := exec.Command("clear")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+}
+
+func (e ClearErr) Error() string {
+	return ""
 }
 
 // HelpErr is Help err

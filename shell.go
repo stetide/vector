@@ -55,11 +55,14 @@ func main() {
 				// fmt.Println("VECTOR " + vector.VERSION)
 				fmt.Println()
 				return
+			case vector.ClearErr:
+				err.(vector.ClearErr).Clear()
+				continue
 			}
 			push(err)
 			continue
 		}
-		fmt.Println(ast)
+		// fmt.Println(ast)
 
 		res, err := vector.Execute(ast)
 		if err != nil {

@@ -2,7 +2,6 @@ package vector
 
 import (
 	"errors"
-	"log"
 	"strconv"
 )
 
@@ -176,6 +175,8 @@ func (p *Parser) makeKeywNode() (Node, error) {
 		err = HelpErr{}
 	case kwANS.name:
 		node = p.makeAns()
+	case kwCLEAR.name, kwCLEAR.getNameByAlias(p.curTok.val):
+		err = ClearErr{}
 	default:
 		err = errors.New("Keyword not implemented")
 	}
@@ -277,7 +278,6 @@ func (p *Parser) Parse() (Node, error) {
 		return nil, err
 	}
 	if p.pos != len(p.tokens) {
-		log.Println("here")
 		return nil, errors.New("Expected expression")
 	}
 	return node, nil
