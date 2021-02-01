@@ -19,6 +19,7 @@ var (
 	kwQUIT  = keyWord{name: "quit", alias: []string{"end", "exit", "close"}}
 	kwCLEAR = keyWord{name: "clear", alias: []string{"cls"}}
 	kwHELP  = keyWord{name: "help"}
+	kwANS   = keyWord{name: "ans"}
 )
 
 var keywords = []keyWord{
@@ -26,6 +27,7 @@ var keywords = []keyWord{
 	kwQUIT,
 	kwCLEAR,
 	kwHELP,
+	kwANS,
 }
 
 func isKeyword(str string) bool {

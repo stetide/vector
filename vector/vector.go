@@ -1,7 +1,7 @@
 package vector
 
 // VERSION is version
-const VERSION = "2.5.10"
+const VERSION = "2.6.10"
 
 // Memory stores Ident, Node values
 type Memory map[string]Node
@@ -36,5 +36,14 @@ func Run(txt string) (Node, error) {
 
 // Execute executes syntax tree
 func Execute(ast Node) (Node, error) {
-	return ast.resolve()
+	res, err := ast.resolve()
+	if err != nil {
+		return nil, err
+	}
+
+	switch res.(type) {
+	case VecNode, NumberNode:
+		memory["ans"] = res
+	}
+	return res, nil
 }

@@ -2,6 +2,7 @@ package vector
 
 import (
 	"errors"
+	"log"
 	"strconv"
 )
 
@@ -158,6 +159,11 @@ func (p *Parser) makeNumNode() (NumberNode, error) {
 	return NumberNode(f), err
 }
 
+func (p *Parser) makeAns() Node {
+	p.advance()
+	return VarNode{Token{ttype: tIDENT, val: "ans"}, nil}
+}
+
 func (p *Parser) makeKeywNode() (Node, error) {
 	var node Node
 	var err error
@@ -168,6 +174,8 @@ func (p *Parser) makeKeywNode() (Node, error) {
 		err = ExitErr{}
 	case kwHELP.name:
 		err = HelpErr{}
+	case kwANS.name:
+		node = p.makeAns()
 	default:
 		err = errors.New("Keyword not implemented")
 	}
@@ -269,6 +277,7 @@ func (p *Parser) Parse() (Node, error) {
 		return nil, err
 	}
 	if p.pos != len(p.tokens) {
+		log.Println("here")
 		return nil, errors.New("Expected expression")
 	}
 	return node, nil
