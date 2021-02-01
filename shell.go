@@ -20,6 +20,17 @@ func push(a interface{}) {
 }
 
 func main() {
+	if len(os.Args[1:]) > 0 {
+		txt := strings.TrimSpace(strings.Join(os.Args[1:], " "))
+		res, err := vector.Run(txt)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(res)
+		return
+	}
+
 	fmt.Println("VECTOR " + vector.VERSION)
 	for {
 		txt := input("$ ")

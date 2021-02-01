@@ -6,6 +6,7 @@ from scratch
            |
         bug fix
 
+implement ans
 fix bug $ vec(1 -1 2) >> vec(0 1)
 implement clear
 implement history
