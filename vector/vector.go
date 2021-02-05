@@ -1,7 +1,7 @@
 package vector
 
 // VERSION is version
-const VERSION = "2.7.10"
+const VERSION = "2.7.11"
 
 // Memory stores Ident, Node values
 type Memory map[string]Node
