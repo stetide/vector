@@ -45,15 +45,13 @@ func main() {
 			push(err)
 			continue
 		}
-		//fmt.Println(tokens)
+		// .Println(tokens)
 
 		parser := vector.NewParser(tokens)
 		ast, err := parser.Parse()
 		if err != nil {
 			switch err.(type) {
 			case vector.ExitErr:
-				// fmt.Println("VECTOR " + vector.VERSION)
-				fmt.Println()
 				return
 			case vector.ClearErr:
 				err.(vector.ClearErr).Clear()

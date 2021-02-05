@@ -39,9 +39,9 @@ type HelpErr struct{}
 
 func (e HelpErr) Error() string {
 	return `HELP
-Assign variable:   $ 'name' = 'expression'
+Assign variable:    $ 'name' = 'expression'
 End program:        $ quit | $ close | $ end | $ exit
-Create vector:      vec('x' 'y' 'z' ...) | ['x' 'y' 'z' ...] | vec('x';'y';'z';...) | ['x';'y';'z';...]
+Create vector:      $ vec('x' 'y' 'z' ...) | ['x' 'y' 'z' ...] | vec('x';'y';'z';...) | ['x';'y';'z';...]
 
 Operator:
 	Add:        '+'

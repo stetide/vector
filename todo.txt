@@ -6,7 +6,6 @@ from scratch
            |
         bug fix
 
-implement clear
-fix bug $ vec(1 -1 2) >> vec(0 1)
+fix bug $ a = a + 3 $ a -> crash
 implement history
 rework errors

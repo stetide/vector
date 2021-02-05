@@ -203,8 +203,9 @@ func (p *Parser) makeVecNode() (VecNode, error) {
 		case tEMPTY:
 			return node, errors.New("Expected " + endTok.val)
 		case tSPACE:
-			p.advance()
-			continue
+			for p.curTok.ttype == tSPACE {
+				p.advance()
+			}
 		case tDLM:
 			var i int
 			if p.previous().ttype == startTok.ttype {

@@ -45,5 +45,8 @@ func Execute(ast Node) (Node, error) {
 	case VecNode, NumberNode:
 		memory["ans"] = res
 	}
+
+	// log.Println(memory)
+
 	return res, nil
 }

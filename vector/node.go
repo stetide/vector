@@ -260,17 +260,18 @@ func (n VarNode) resolve() (Node, error) {
 	}
 
 	// test value
-	switch n.val.(type) {
+	if _, err := n.val.resolve(); err != nil {
+		return nil, err
+	}
+
+	/*switch n.val.(type) {
 	case VarNode:
-		if _, err := n.val.resolve(); err != nil {
-			return nil, err
-		}
 		tmp, ok := memory[n.val.(VarNode).ident.val]
 		if !ok {
 			return nil, errors.New(n.val.(VarNode).ident.val + "is not defined")
 		}
 		n.val = tmp
-	}
+	}*/
 
 	memory[n.ident.val] = n.val
 	return nil, nil

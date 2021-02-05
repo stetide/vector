@@ -15,11 +15,12 @@ func (k keyWord) getNameByAlias(al string) string {
 }
 
 var (
-	kwVEC   = keyWord{name: "vec"}
-	kwQUIT  = keyWord{name: "quit", alias: []string{"end", "exit", "close"}}
-	kwCLEAR = keyWord{name: "clear", alias: []string{"cls"}}
-	kwHELP  = keyWord{name: "help"}
-	kwANS   = keyWord{name: "ans"}
+	kwVEC    = keyWord{name: "vec"}
+	kwQUIT   = keyWord{name: "quit", alias: []string{"end", "exit", "close"}}
+	kwCLEAR  = keyWord{name: "clear", alias: []string{"cls"}}
+	kwHELP   = keyWord{name: "help"}
+	kwANS    = keyWord{name: "ans"}
+	kwEXPORT = keyWord{name: "export", alias: []string{"save"}}
 )
 
 var keywords = []keyWord{
@@ -28,6 +29,7 @@ var keywords = []keyWord{
 	kwCLEAR,
 	kwHELP,
 	kwANS,
+	kwEXPORT,
 }
 
 func isKeyword(str string) bool {

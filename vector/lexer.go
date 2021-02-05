@@ -14,10 +14,12 @@ const (
 
 // Lexer lexes given input
 type Lexer struct {
-	text   string
-	pos    int
-	char   rune
-	tokens []Token
+	text       string
+	pos        int
+	char       rune
+	tokens     []Token
+	inVec      bool
+	paranDepth int
 }
 
 // NewLexer returns new Lexer
@@ -61,6 +63,9 @@ func (l *Lexer) makeIdentKw() {
 	}
 
 	if isKeyword(identStr) {
+		if identStr == kwVEC.name {
+			l.inVec = true
+		}
 		l.tokens = append(l.tokens, Token{tKEYW, identStr})
 		return
 	}
@@ -83,6 +88,9 @@ func (l *Lexer) GenerateTokens() ([]Token, error) {
 		}
 		switch l.char {
 		case ' ':
+			if l.inVec && l.paranDepth == 1 {
+				l.tokens = append(l.tokens, Token{tSPACE, string(l.char)})
+			}
 		case '+':
 			l.tokens = append(l.tokens, Token{tPLUS, string(l.char)})
 		case '-':
@@ -99,12 +107,25 @@ func (l *Lexer) GenerateTokens() ([]Token, error) {
 			l.tokens = append(l.tokens, Token{tEQ, string(l.char)})
 		case '(':
 			l.tokens = append(l.tokens, Token{tLPAREN, string(l.char)})
+			if l.inVec {
+				l.paranDepth++
+			}
 		case ')':
 			l.tokens = append(l.tokens, Token{tRPAREN, string(l.char)})
+			if l.inVec {
+				l.paranDepth--
+				if l.paranDepth == 0 {
+					l.inVec = false
+				}
+			}
 		case '[':
 			l.tokens = append(l.tokens, Token{tLVECPAR, string(l.char)})
+			l.inVec = true
+			l.paranDepth = 1
 		case ']':
 			l.tokens = append(l.tokens, Token{tRVECPAR, string(l.char)})
+			l.inVec = false
+			l.paranDepth = 0
 		case '?':
 			l.tokens = append(l.tokens, Token{tABSQ, string(l.char)})
 		case '|':
