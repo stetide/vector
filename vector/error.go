@@ -1,6 +1,7 @@
 package vector
 
 import (
+	"log"
 	"os"
 	"os/exec"
 	"runtime"
@@ -20,7 +21,8 @@ type ClearErr struct{}
 func (e ClearErr) Clear() {
 	switch runtime.GOOS {
 	case "windows":
-		cmd := exec.Command("cls")
+		log.Println("windows")
+		cmd := exec.Command("cmd", "/c", "cls")
 		cmd.Stdout = os.Stdout
 		cmd.Run()
 	case "linux":

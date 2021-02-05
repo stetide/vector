@@ -1,9 +1,9 @@
 package main
 
 import (
-	"andre/vector/vector"
 	"bufio"
 	"fmt"
+	"me/vector/vector"
 	"os"
 	"strings"
 )
