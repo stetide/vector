@@ -45,7 +45,7 @@ func main() {
 			push(err)
 			continue
 		}
-		// .Println(tokens)
+		// log.Println(tokens)
 
 		parser := vector.NewParser(tokens)
 		ast, err := parser.Parse()

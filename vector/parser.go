@@ -22,7 +22,6 @@ func NewParser(tokens []Token) *Parser {
 func (p *Parser) advance() {
 	p.pos++
 	if p.pos >= len(p.tokens) {
-		// log.Println("advance err", p.curTok.ttype)
 		p.curTok = Token{}
 		return
 	}
@@ -132,7 +131,6 @@ func (p *Parser) makeParens() (Node, error) {
 	node, err = p.expr()
 	if p.curTok.ttype != tRPAREN {
 		err = errors.New("Expected )")
-		// log.Println(p.curTok, p.pos)
 	}
 	p.advance()
 	return node, err
@@ -144,7 +142,6 @@ func (p *Parser) makeVarNode() (VarNode, error) {
 	node.ident = p.curTok
 	p.advance()
 	if p.curTok.ttype != tEQ {
-		// return VarNode{}, errors.New("Expected =")
 		return node, nil
 	}
 	p.advance()
@@ -209,17 +206,14 @@ func (p *Parser) makeVecNode() (VecNode, error) {
 		case tDLM:
 			var i int
 			if p.previous().ttype == startTok.ttype {
-				// log.Println("prev")
 				i++
 			}
 			for p.curTok.ttype == tDLM {
-				// log.Println("curr")
 				i++
 				p.advance()
 			}
 
 			if p.curTok.ttype != endTok.ttype {
-				// log.Println("next")
 				i--
 			}
 

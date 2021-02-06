@@ -10,6 +10,7 @@ import (
 // Node is node type
 type Node interface {
 	resolve() (Node, error)
+	fixVarRecursion(caller VarNode) Node
 	String() string
 }
 
@@ -52,11 +53,11 @@ func (n NumberNode) resolve() (Node, error) {
 	return n, nil
 }
 
+func (n NumberNode) fixVarRecursion(caller VarNode) Node {
+	return n
+}
+
 func (n NumberNode) String() string {
-	/*if float64(int(n)) == float64(n) {
-		return fmt.Sprintf("%d", int(n))
-	}
-	return fmt.Sprintf("%f", float64(n))*/
 	return strconv.FormatFloat(float64(n), 'f', -1, 64)
 }
 
@@ -101,6 +102,10 @@ func (n UnaryNode) resolve() (Node, error) {
 		return nil, errors.New("Unary operator not implemented")
 	}
 	return n, nil
+}
+
+func (n UnaryNode) fixVarRecursion(caller VarNode) Node {
+	return n.node.fixVarRecursion(caller)
 }
 
 func (n UnaryNode) String() string {
@@ -240,6 +245,17 @@ func (n OperationNode) resolve() (Node, error) {
 	return node, nil
 }
 
+func (n OperationNode) fixVarRecursion(caller VarNode) Node {
+	if n.left.fixVarRecursion(caller) != n.left {
+		res, _ := n.resolve()
+		return res
+	} else if n.right.fixVarRecursion(caller) != n.right {
+		res, _ := n.resolve()
+		return res
+	}
+	return n
+}
+
 func (n OperationNode) String() string {
 	return fmt.Sprintf("(%s %s %s)", n.left, n.op.val, n.right)
 }
@@ -259,22 +275,31 @@ func (n VarNode) resolve() (Node, error) {
 		return nil, errors.New(n.ident.val + " is not defined")
 	}
 
-	// test value
+	// test value for error
 	if _, err := n.val.resolve(); err != nil {
 		return nil, err
 	}
 
-	/*switch n.val.(type) {
-	case VarNode:
-		tmp, ok := memory[n.val.(VarNode).ident.val]
-		if !ok {
-			return nil, errors.New(n.val.(VarNode).ident.val + "is not defined")
-		}
-		n.val = tmp
-	}*/
-
+	// test for recursion
+	n.val = n.val.fixVarRecursion(n)
 	memory[n.ident.val] = n.val
+
 	return nil, nil
+}
+
+func (n VarNode) fixVarRecursion(caller VarNode) Node {
+	if n.ident == caller.ident {
+		tmp, _ := n.resolve()
+		return tmp
+	}
+
+	val := memory[n.ident.val] // .fixVarRecursion(caller)
+	switch val.(type) {
+	case VarNode:
+		val = val.fixVarRecursion(caller)
+		return val
+	}
+	return n
 }
 
 func (n VarNode) String() string {
@@ -390,6 +415,10 @@ func (n VecNode) resolve() (Node, error) {
 		node.fields = append(node.fields, f)
 	}
 	return node, nil
+}
+
+func (n VecNode) fixVarRecursion(caller VarNode) Node {
+	return n
 }
 
 func (n VecNode) String() string {
