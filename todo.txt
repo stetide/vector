@@ -6,6 +6,5 @@ from scratch
            |
         bug fix
 
-fix bug $ a = a + 3 $ a -> crash
 implement history
 rework errors
