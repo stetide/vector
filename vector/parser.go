@@ -2,6 +2,7 @@ package vector
 
 import (
 	"errors"
+	"log"
 	"strconv"
 )
 
@@ -203,6 +204,7 @@ func (p *Parser) makeVecNode() (VecNode, error) {
 			for p.curTok.ttype == tSPACE {
 				p.advance()
 			}
+			continue
 		case tDLM:
 			var i int
 			if p.previous().ttype == startTok.ttype {
@@ -261,6 +263,7 @@ func (p *Parser) factor() (Node, error) {
 	case tKEYW:
 		node, err = p.makeKeywNode()
 	default:
+		log.Println(p.curTok)
 		err = errors.New("Expected expression")
 	}
 	return node, err

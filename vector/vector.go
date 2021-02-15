@@ -1,7 +1,12 @@
 package vector
 
+import (
+	"fmt"
+	"runtime"
+)
+
 // VERSION is version
-const VERSION = "2.7.12"
+const VERSION = "2.8.13"
 
 // Memory stores Ident, Node values
 type Memory map[string]Node
@@ -46,7 +51,12 @@ func Execute(ast Node) (Node, error) {
 		memory["ans"] = res
 	}
 
-	// log.Println(memory)
+	switch runtime.GOOS {
+	case "js":
+		fmt.Println(memory)
+		// case "windows", "linux":
+		// 	fmt.Println(memory)
+	}
 
 	return res, nil
 }
