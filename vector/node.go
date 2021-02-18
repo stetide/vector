@@ -179,6 +179,8 @@ func (n OperationNode) resolve() (Node, error) {
 			switch n.right.(type) {
 			case NumberNode:
 				node = n.left.(VecNode).scalarMul(n.right.(NumberNode))
+			case VecNode:
+				node = n.left.(VecNode).mul(n.right.(VecNode))
 			default:
 				return nil, errors.New("Not implemented")
 			}
@@ -362,7 +364,29 @@ func (n VecNode) min(a VecNode) VecNode {
 	return node
 }
 
-func (n VecNode) mul(a VecNode) {}
+func (n VecNode) mul(a VecNode) NumberNode {
+	var res NumberNode
+
+	nlen := len(n.fields)
+	alen := len(a.fields)
+	if alen != nlen {
+		if alen < nlen {
+			for i := 0; i < nlen-alen; i++ {
+				a.fields = append(a.fields, NumberNode(0))
+			}
+		} else {
+			for i := 0; i < alen-nlen; i++ {
+				n.fields = append(n.fields, NumberNode(0))
+			}
+		}
+	}
+
+	for i, f := range n.fields {
+		res += f.(NumberNode).mul(a.fields[i].(NumberNode))
+	}
+
+	return res
+}
 
 func (n VecNode) div(a VecNode) {}
 
