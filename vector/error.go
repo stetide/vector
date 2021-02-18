@@ -34,12 +34,11 @@ func (e ClearErr) Clear() {
 
 func (e ClearErr) Error() string {
 	switch runtime.GOOS {
-	case "windows", "linux":
-		return ""
 	case "js":
 		return "clear"
+	default:
+		return ""
 	}
-	return ""
 }
 
 // HelpErr is Help err
