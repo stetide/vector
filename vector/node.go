@@ -79,7 +79,7 @@ func (n UnaryNode) resolve() (Node, error) {
 
 	switch n.op.ttype {
 	case tPLUS:
-		break
+		return n.node.resolve()
 	case tMINUS:
 		switch n.node.(type) {
 		case NumberNode:

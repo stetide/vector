@@ -3,9 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"me/vector/vector"
 	"os"
 	"strings"
+
+	"github.com/stetide/vector/vector"
 )
 
 func input(msg string) string {
