@@ -41,9 +41,12 @@ func (l *Lexer) advance() {
 func (l *Lexer) makeNum() error {
 	var numStr string
 	var dotCount int
-	for strings.ContainsRune(sDIGITS+".", l.char) {
+	for strings.ContainsRune(sDIGITS+".,", l.char) {
 		if l.char == '.' {
 			dotCount++
+		} else if l.char == ',' {
+			dotCount++
+			l.char = '.'
 		}
 		if dotCount > 1 {
 			return errors.New("Invalid number")
@@ -76,7 +79,7 @@ func (l *Lexer) makeIdentKw() {
 // GenerateTokens generates token slice from text
 func (l *Lexer) GenerateTokens() ([]Token, error) {
 	for l.pos < len(l.text) {
-		if strings.ContainsRune(sDIGITS, l.char) {
+		if strings.ContainsRune(sDIGITS+".,", l.char) {
 			if err := l.makeNum(); err != nil {
 				return nil, err
 			}
