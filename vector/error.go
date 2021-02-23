@@ -7,6 +7,35 @@ import (
 	"runtime"
 )
 
+// CharacterErr on invalid character
+type CharacterErr struct{ msg string }
+
+func (e CharacterErr) Error() string {
+	return "Invalid character: " + e.msg
+}
+
+// SyntaxErr is syntax err
+type SyntaxErr struct{ msg string }
+
+func (e SyntaxErr) Error() string {
+	// return "Invalid Syntax: " + e.msg
+	return e.msg
+}
+
+// RuntimeErr from nodes
+type RuntimeErr struct{ msg string }
+
+func (e RuntimeErr) Error() string {
+	return e.msg
+}
+
+// ImplementErr occurens when not implemented
+type ImplementErr struct{ msg string }
+
+func (e ImplementErr) Error() string {
+	return e.msg
+}
+
 // ExitErr is exit err
 type ExitErr struct{}
 

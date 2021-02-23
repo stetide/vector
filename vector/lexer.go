@@ -1,7 +1,6 @@
 package vector
 
 import (
-	"errors"
 	"strings"
 )
 
@@ -48,11 +47,11 @@ func (l *Lexer) makeNum() error {
 			dotCount++
 			l.char = '.'
 		}
-		if dotCount > 1 {
-			return errors.New("Invalid number")
-		}
 		numStr += string(l.char)
 		l.advance()
+	}
+	if dotCount > 1 {
+		return SyntaxErr{numStr + " is not a number"}
 	}
 	l.tokens = append(l.tokens, Token{tNUM, numStr})
 	return nil
@@ -136,7 +135,7 @@ func (l *Lexer) GenerateTokens() ([]Token, error) {
 		case ';':
 			l.tokens = append(l.tokens, Token{tDLM, string(l.char)})
 		default:
-			return nil, errors.New("Invalid Character")
+			return nil, CharacterErr{string(l.char)}
 		}
 		l.advance()
 	}

@@ -31,7 +31,7 @@ func (n NumberNode) mul(a NumberNode) NumberNode {
 
 func (n NumberNode) div(a NumberNode) (NumberNode, error) {
 	if a == 0 {
-		return 0, errors.New("Division by zero")
+		return 0, RuntimeErr{"Division by zero"}
 	}
 	return n / a, nil
 }
@@ -42,7 +42,7 @@ func (n NumberNode) pow(a NumberNode) NumberNode {
 
 func (n NumberNode) rot(a NumberNode) (NumberNode, error) {
 	if n < 0 {
-		return 0, errors.New("Negative root")
+		return 0, RuntimeErr{"Negative number in root"}
 	} else if n == 0 {
 		return 0, nil
 	}
@@ -74,7 +74,7 @@ func (n UnaryNode) resolve() (Node, error) {
 		return nil, err
 	}
 	if n.node == nil {
-		return nil, errors.New("Invalid syntax")
+		return nil, errors.New("Invalid syntax -> what error?")
 	}
 
 	switch n.op.ttype {
@@ -99,7 +99,7 @@ func (n UnaryNode) resolve() (Node, error) {
 			return n.node.(VecNode).abs(), nil
 		}
 	default:
-		return nil, errors.New("Unary operator not implemented")
+		return nil, ImplementErr{"Unary operator not implemented: " + n.op.String()}
 	}
 	return n, nil
 }
@@ -151,7 +151,7 @@ func (n OperationNode) resolve() (Node, error) {
 	switch n.op.ttype {
 	case tPLUS:
 		if n.conflicts() {
-			return nil, errors.New("Conflicting types")
+			return nil, RuntimeErr{"Cannot add vec and num"}
 		}
 		switch n.left.(type) {
 		case VecNode:
@@ -159,11 +159,11 @@ func (n OperationNode) resolve() (Node, error) {
 		case NumberNode:
 			node = n.left.(NumberNode).add(n.right.(NumberNode))
 		default:
-			return nil, errors.New("Unexpected type")
+			return nil, RuntimeErr{"Unexpected type"}
 		}
 	case tMINUS:
 		if n.conflicts() {
-			return nil, errors.New("Conflicting types")
+			return nil, RuntimeErr{"Cannot subtract vec and num"}
 		}
 		switch n.left.(type) {
 		case VecNode:
@@ -171,7 +171,7 @@ func (n OperationNode) resolve() (Node, error) {
 		case NumberNode:
 			node = n.left.(NumberNode).min(n.right.(NumberNode))
 		default:
-			return nil, errors.New("Unexpected type")
+			return nil, RuntimeErr{"Unexpected type"}
 		}
 	case tMUL:
 		switch n.left.(type) {
@@ -182,7 +182,7 @@ func (n OperationNode) resolve() (Node, error) {
 			case VecNode:
 				node = n.left.(VecNode).mul(n.right.(VecNode))
 			default:
-				return nil, errors.New("Not implemented")
+				return nil, ImplementErr{"Not implemented"}
 			}
 		case NumberNode:
 			switch n.right.(type) {
@@ -192,7 +192,7 @@ func (n OperationNode) resolve() (Node, error) {
 				node = n.right.(VecNode).scalarMul(n.left.(NumberNode))
 			}
 		default:
-			return nil, errors.New("Unexpected type")
+			return nil, RuntimeErr{"Unexpected type"}
 		}
 	case tDIV:
 		switch n.left.(type) {
@@ -203,7 +203,7 @@ func (n OperationNode) resolve() (Node, error) {
 					return nil, err
 				}
 			default:
-				return nil, errors.New("Not implemented")
+				return nil, ImplementErr{"Not implemented"}
 			}
 		case NumberNode:
 			switch n.right.(type) {
@@ -212,19 +212,19 @@ func (n OperationNode) resolve() (Node, error) {
 					return nil, err
 				}
 			case VecNode:
-				return nil, errors.New("Cannot divide by Vec")
+				return nil, RuntimeErr{"Cannot divide by Vec"}
 			}
 		default:
-			return nil, errors.New("Unexpected type")
+			return nil, RuntimeErr{"Unexpected type"}
 		}
 	case tPOW:
 		switch n.left.(type) {
 		case VecNode:
-			return nil, errors.New("Pow for vec not implemented")
+			return nil, ImplementErr{"Pow for vec not implemented"}
 		case NumberNode:
 			switch n.right.(type) {
 			case VecNode:
-				return nil, errors.New("Pow for vec not implemented")
+				return nil, ImplementErr{"Pow for vec not implemented"}
 			case NumberNode:
 				node = n.left.(NumberNode).pow(n.right.(NumberNode))
 			}
@@ -232,11 +232,11 @@ func (n OperationNode) resolve() (Node, error) {
 	case tROOT:
 		switch n.left.(type) {
 		case VecNode:
-			return nil, errors.New("Pow for vec not implemented")
+			return nil, ImplementErr{"Pow for vec not implemented"}
 		case NumberNode:
 			switch n.right.(type) {
 			case VecNode:
-				return nil, errors.New("Pow for vec not implemented")
+				return nil, ImplementErr{"Pow for vec not implemented"}
 			case NumberNode:
 				if node, err = n.right.(NumberNode).rot(n.left.(NumberNode)); err != nil {
 					return nil, err
@@ -274,7 +274,7 @@ func (n VarNode) resolve() (Node, error) {
 		if v, ok := memory[n.ident.val]; ok {
 			return v.resolve()
 		}
-		return nil, errors.New(n.ident.val + " is not defined")
+		return nil, RuntimeErr{n.ident.val + " is not defined"}
 	}
 
 	// test value for error
@@ -403,7 +403,7 @@ func (n VecNode) scalarDiv(a NumberNode) (VecNode, error) {
 	var err error
 	var node VecNode
 	if a == 0 {
-		return VecNode{}, errors.New("Divisino by zero")
+		return VecNode{}, RuntimeErr{"Division by zero"}
 	}
 	for _, f := range n.fields {
 		f, err = f.(NumberNode).div(a)
@@ -434,7 +434,7 @@ func (n VecNode) resolve() (Node, error) {
 		}
 		switch f.(type) {
 		case VecNode:
-			return nil, errors.New("Vec in vec not allowed")
+			return nil, RuntimeErr{"Vec in vec not allowed"}
 		}
 		node.fields = append(node.fields, f)
 	}

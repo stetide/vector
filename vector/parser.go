@@ -1,7 +1,6 @@
 package vector
 
 import (
-	"errors"
 	"log"
 	"strconv"
 )
@@ -112,7 +111,7 @@ func (p *Parser) makeUnaryNode() (UnaryNode, error) {
 			return node, err
 		}
 		if p.curTok.ttype != tABS {
-			return node, errors.New("Expected |")
+			return node, SyntaxErr{"Expected |"}
 		}
 		p.advance()
 		return node, nil
@@ -131,7 +130,7 @@ func (p *Parser) makeParens() (Node, error) {
 	// log.Println(p.pos)
 	node, err = p.expr()
 	if p.curTok.ttype != tRPAREN {
-		err = errors.New("Expected )")
+		err = SyntaxErr{"Expected )"}
 	}
 	p.advance()
 	return node, err
@@ -150,7 +149,7 @@ func (p *Parser) makeVarNode() (VarNode, error) {
 	switch node.val.(type) {
 	case VarNode:
 		if node.val.(VarNode).val != nil {
-			return node, errors.New("invalid syntax")
+			return node, SyntaxErr{"Cannot assign variable in variable assignment"}
 		}
 	}
 	return node, err
@@ -182,7 +181,7 @@ func (p *Parser) makeKeywNode() (Node, error) {
 	case kwCLEAR.name, kwCLEAR.getNameByAlias(p.curTok.val):
 		err = ClearErr{}
 	default:
-		err = errors.New("Keyword not implemented")
+		err = ImplementErr{"Keyword not implemented"}
 	}
 	return node, err
 }
@@ -195,7 +194,7 @@ func (p *Parser) makeVecNode() (VecNode, error) {
 	p.advance()
 	if p.previous().ttype != tLVECPAR {
 		if p.curTok.ttype != tLPAREN {
-			return node, errors.New("Expected (")
+			return node, SyntaxErr{"Expected ("}
 		}
 		p.advance()
 		startTok = Token{tLPAREN, "("}
@@ -205,7 +204,7 @@ func (p *Parser) makeVecNode() (VecNode, error) {
 	for p.curTok.ttype != endTok.ttype {
 		switch p.curTok.ttype {
 		case tEMPTY:
-			return node, errors.New("Expected " + endTok.val)
+			return node, SyntaxErr{"Expected " + endTok.val}
 		case tSPACE:
 			for p.curTok.ttype == tSPACE {
 				p.advance()
@@ -238,10 +237,10 @@ func (p *Parser) makeVecNode() (VecNode, error) {
 		}
 		switch n.(type) {
 		case VecNode:
-			return node, errors.New("Vec in vec not allowed")
+			return node, SyntaxErr{"Vec in vec not allowed"}
 		case VarNode:
 			if n.(VarNode).val != nil {
-				return node, errors.New("Cannot assign var in vec")
+				return node, SyntaxErr{"Cannot assign var in vec"}
 			}
 		}
 		node.fields = append(node.fields, n)
@@ -270,7 +269,7 @@ func (p *Parser) factor() (Node, error) {
 		node, err = p.makeKeywNode()
 	default:
 		log.Println(p.curTok)
-		err = errors.New("Expected expression")
+		err = SyntaxErr{"Expected expression"}
 	}
 	return node, err
 }
@@ -282,7 +281,7 @@ func (p *Parser) Parse() (Node, error) {
 		return nil, err
 	}
 	if p.pos != len(p.tokens) {
-		return nil, errors.New("Expected expression")
+		return nil, SyntaxErr{"Expected expression"}
 	}
 	return node, nil
 }
