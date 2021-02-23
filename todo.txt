@@ -6,5 +6,5 @@ from scratch
            |
         bug fix
 
-implement ln & log
+implement ln & log, sin & cos
 implement history

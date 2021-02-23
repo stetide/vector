@@ -311,6 +311,25 @@ func (n VarNode) String() string {
 	return fmt.Sprintf("(%s::%s)", n.ident, n.val)
 }
 
+// FuncNode is func node
+type FuncNode struct {
+	ident string
+	args  []Node
+	ret   Node
+}
+
+func (n FuncNode) resolve() (Node, error) {
+	return nil, nil
+}
+
+func (n FuncNode) fixVarRecursion(caller VarNode) Node {
+	return nil
+}
+
+func (n FuncNode) String() string {
+	return fmt.Sprintf("func:%s(%v):%s", n.ident, n.args, n.ret)
+}
+
 // VecNode represents Vector
 type VecNode struct {
 	fields []Node
