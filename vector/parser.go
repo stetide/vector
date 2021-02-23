@@ -147,6 +147,12 @@ func (p *Parser) makeVarNode() (VarNode, error) {
 	}
 	p.advance()
 	node.val, err = p.expr()
+	switch node.val.(type) {
+	case VarNode:
+		if node.val.(VarNode).val != nil {
+			return node, errors.New("invalid syntax")
+		}
+	}
 	return node, err
 }
 
