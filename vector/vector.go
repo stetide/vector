@@ -6,7 +6,7 @@ import (
 )
 
 // VERSION is version
-const VERSION = "2.10.16"
+const VERSION = "2.10.19"
 
 // Memory stores Ident, Node values
 type Memory map[string]Node
@@ -57,6 +57,7 @@ func Execute(ast Node) (Node, error) {
 		// case "windows", "linux":
 		// 	fmt.Println(memory)
 	}
+	fmt.Println(memory)
 
 	return res, nil
 }

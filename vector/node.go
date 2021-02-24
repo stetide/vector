@@ -105,7 +105,10 @@ func (n UnaryNode) resolve() (Node, error) {
 }
 
 func (n UnaryNode) fixVarRecursion(caller VarNode) Node {
-	return n.node.fixVarRecursion(caller)
+	if n.node.fixVarRecursion(caller) != n.node {
+		n.node, _ = n.resolve()
+	}
+	return n
 }
 
 func (n UnaryNode) String() string {
@@ -248,6 +251,10 @@ func (n OperationNode) resolve() (Node, error) {
 }
 
 func (n OperationNode) fixVarRecursion(caller VarNode) Node {
+	switch n.left.fixVarRecursion(caller).(type) {
+	case VecNode:
+		return n
+	}
 	if n.left.fixVarRecursion(caller) != n.left {
 		res, _ := n.resolve()
 		return res
@@ -313,9 +320,9 @@ func (n VarNode) String() string {
 
 // FuncNode is func node
 type FuncNode struct {
-	ident string
-	args  []Node
-	ret   Node
+	fun  function
+	args []Node
+	ret  Node
 }
 
 func (n FuncNode) resolve() (Node, error) {
@@ -327,7 +334,7 @@ func (n FuncNode) fixVarRecursion(caller VarNode) Node {
 }
 
 func (n FuncNode) String() string {
-	return fmt.Sprintf("func:%s(%v):%s", n.ident, n.args, n.ret)
+	return fmt.Sprintf("func:%s(%v):%s", n.fun, n.args, n.ret)
 }
 
 // VecNode represents Vector

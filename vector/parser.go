@@ -106,7 +106,7 @@ func (p *Parser) makeUnaryNode() (UnaryNode, error) {
 	if p.curTok.ttype == tABS {
 		node.op = Token{ttype: tABSQ, val: "?"}
 		p.advance()
-		node.node, err = p.factor()
+		node.node, err = p.expr()
 		if err != nil {
 			return node, err
 		}
@@ -184,6 +184,10 @@ func (p *Parser) makeKeywNode() (Node, error) {
 		err = ImplementErr{"Keyword not implemented"}
 	}
 	return node, err
+}
+
+func (p *Parser) makeFuncNode() (FuncNode, error) {
+	return FuncNode{}, nil
 }
 
 func (p *Parser) makeVecNode() (VecNode, error) {
@@ -267,6 +271,8 @@ func (p *Parser) factor() (Node, error) {
 		node, err = p.makeVarNode()
 	case tKEYW:
 		node, err = p.makeKeywNode()
+	case tFUNC:
+		node, err = p.makeFuncNode()
 	default:
 		log.Println(p.curTok)
 		err = SyntaxErr{"Expected expression"}

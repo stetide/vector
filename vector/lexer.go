@@ -57,7 +57,7 @@ func (l *Lexer) makeNum() error {
 	return nil
 }
 
-func (l *Lexer) makeIdentKw() {
+func (l *Lexer) makeIdentKwFunc() {
 	var identStr string
 	for strings.ContainsRune(sLETTERS+"_"+sDIGITS, l.char) {
 		identStr += string(l.char)
@@ -69,10 +69,11 @@ func (l *Lexer) makeIdentKw() {
 			l.inVec = true
 		}
 		l.tokens = append(l.tokens, Token{tKEYW, identStr})
-		return
+	} else if isFunc(identStr) {
+		l.tokens = append(l.tokens, Token{tFUNC, identStr})
+	} else {
+		l.tokens = append(l.tokens, Token{tIDENT, identStr})
 	}
-
-	l.tokens = append(l.tokens, Token{tIDENT, identStr})
 }
 
 // GenerateTokens generates token slice from text
@@ -85,7 +86,7 @@ func (l *Lexer) GenerateTokens() ([]Token, error) {
 			continue
 		}
 		if strings.ContainsRune(sLETTERS+"_", l.char) {
-			l.makeIdentKw()
+			l.makeIdentKwFunc()
 			continue
 		}
 		switch l.char {

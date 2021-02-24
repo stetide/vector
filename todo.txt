@@ -6,5 +6,8 @@ from scratch
            |
         bug fix
 
-implement ln & log, sin & cos
+implement ln & log, sin & cos, f(x)
+implement 10e-3
+fix bug 3.8 - 3.2 = 0.5999999999999996
+implement constants
 implement history

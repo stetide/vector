@@ -10,6 +10,7 @@ const (
 	tNUM
 	tIDENT
 	tKEYW
+	tFUNC
 	tDLM
 	tSPACE
 	tPLUS
@@ -32,6 +33,7 @@ var sTypes = []string{
 	"NUM",
 	"IDENT",
 	"KEYW",
+	"FUNC",
 	"DLM",
 	"SPACE",
 	"PLUS",
@@ -63,9 +65,9 @@ type Token struct {
 }
 
 func (t Token) String() string {
-	if t.ttype == tKEYW {
+	if t.ttype == tKEYW || t.ttype == tFUNC {
 		return strings.ToUpper(fmt.Sprintf("%s", t.val))
-	} else if t.ttype > tKEYW {
+	} else if t.ttype > tFUNC {
 		return fmt.Sprintf("%s", t.ttype)
 	}
 	return fmt.Sprintf("%s:%s", t.ttype, t.val)
