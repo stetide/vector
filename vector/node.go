@@ -105,6 +105,11 @@ func (n UnaryNode) resolve() (Node, error) {
 }
 
 func (n UnaryNode) fixVarRecursion(caller VarNode) Node {
+	nn, _ := n.node.resolve()
+	switch nn.(type) {
+	case VecNode:
+		return n
+	}
 	if n.node.fixVarRecursion(caller) != n.node {
 		n.node, _ = n.resolve()
 	}
@@ -251,7 +256,8 @@ func (n OperationNode) resolve() (Node, error) {
 }
 
 func (n OperationNode) fixVarRecursion(caller VarNode) Node {
-	switch n.left.fixVarRecursion(caller).(type) {
+	nn, _ := n.left.resolve()
+	switch nn.(type) {
 	case VecNode:
 		return n
 	}

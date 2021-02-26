@@ -6,7 +6,7 @@ import (
 )
 
 // VERSION is version
-const VERSION = "2.10.19"
+const VERSION = "2.10.20"
 
 // Memory stores Ident, Node values
 type Memory map[string]Node
